@@ -15,9 +15,9 @@ export const ChatFrame = () => {
         if (pending) return;
 
         const newController = new AbortController();
-        setController(newController); // Store the controller to allow aborting
+        setController(newController);
         setPending(true);
-        setStartTime(Date.now()); // Capture start time
+        setStartTime(Date.now());
         setQuestion((prev) => [...prev, q]);
         setAnswer((prev) => [...prev, "pending"]);
 
@@ -29,7 +29,7 @@ export const ChatFrame = () => {
         try {
             const response = await Promise.race([
                 invoke("talk_with_ai", { message: q, signal: newController.signal }) as Promise<string>,
-                timeoutPromise
+                timeoutPromise,
             ]);
 
             setAnswer((prev) => {
@@ -40,25 +40,26 @@ export const ChatFrame = () => {
         } catch (err) {
             setAnswer((prev) => {
                 const updated = [...prev];
-                updated[updated.length - 1] =
-                    err instanceof Error ? err.message : "Unknown error";
+                updated[updated.length - 1] = err instanceof Error ? err.message : "Unknown error";
                 return updated;
             });
+        } finally {
+            setPending(false);
+            setController(null); // Cleanup controller
         }
-
-        setPending(false);
     }
 
     // Function to abort the AI request
     const abortRequest = () => {
         if (controller) {
             controller.abort();
+            setController(null);
             setAnswer((prev) => {
                 const updated = [...prev];
                 updated[updated.length - 1] = "Request aborted by user";
                 return updated;
             });
-            setPending(false); // Stop the pending state
+            setPending(false);
         }
     };
 
@@ -80,20 +81,20 @@ export const ChatFrame = () => {
                     setUserQuestion={setUserQuestion}
                     ask_ai={ask_ai}
                     disabled={pending}
-                    abortRequest={abortRequest} // Pass abort function to input component
+                    abortRequest={abortRequest}
                 />
             </div>
         </div>
     );
 };
 
-// ChatInput Component (Input and Buttons)
+// ChatInput Component
 type ChatInputProps = {
     userQuestion: string;
     setUserQuestion: (val: string) => void;
     ask_ai: (q: string) => void;
     disabled: boolean;
-    abortRequest: () => void; // New prop for aborting the request
+    abortRequest: () => void;
 };
 
 export const ChatInput = ({
@@ -103,6 +104,13 @@ export const ChatInput = ({
     disabled,
     abortRequest
 }: ChatInputProps) => {
+    const handleSubmit = () => {
+        if (!disabled && userQuestion.trim()) {
+            ask_ai(userQuestion);
+            setUserQuestion("");
+        }
+    };
+
     return (
         <div className="w-full bg-blue-200 rounded-md px-2 py-2 flex items-center gap-2 justify-between">
             <input
@@ -110,14 +118,17 @@ export const ChatInput = ({
                 className="w-3/4 px-2 py-1 rounded"
                 value={userQuestion}
                 onChange={(e) => setUserQuestion(e.target.value)}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleSubmit();
+                    }
+                }}
                 disabled={disabled}
             />
             <button
                 className="px-4 py-2 bg-blue-500 text-white rounded flex justify-center items-center disabled:opacity-50"
-                onClick={() => {
-                    ask_ai(userQuestion);
-                    setUserQuestion("");
-                }}
+                onClick={handleSubmit}
                 disabled={disabled || !userQuestion.trim()}
             >
                 Send
@@ -134,7 +145,8 @@ export const ChatInput = ({
     );
 };
 
-// MessageDisplay Component (Displays User Messages)
+
+// MessageDisplay Component
 export const MessageDisplay = ({ data }: { data: string }) => {
     return (
         <div className="bg-green-300 text-black mt-2 text-right rounded-md px-2 w-fit ml-auto">
@@ -143,17 +155,16 @@ export const MessageDisplay = ({ data }: { data: string }) => {
     );
 };
 
-// ResponseDisplay Component (Displays AI Responses with Timer)
+// ResponseDisplay Component
 export const ResponseDisplay = ({ data, startTime }: { data: string; startTime: number }) => {
     const [elapsedTime, setElapsedTime] = useState<number>(0);
 
     useEffect(() => {
         if (data === "pending") {
             const interval = setInterval(() => {
-                setElapsedTime(Math.floor((Date.now() - startTime) / 60000)); // minutes
-            }, 60000); // Update every minute
-
-            return () => clearInterval(interval); // Clean up on unmount
+                setElapsedTime(Math.floor((Date.now() - startTime) / 60000));
+            }, 60000);
+            return () => clearInterval(interval);
         }
     }, [data, startTime]);
 
@@ -162,7 +173,9 @@ export const ResponseDisplay = ({ data, startTime }: { data: string; startTime: 
             <div className="bg-blue-300 text-black mt-2 text-left rounded-md px-3 py-2 w-fit">
                 <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
                 {elapsedTime > 0 && (
-                    <span className="text-xs text-gray-600 ml-2">Waiting for response: {elapsedTime} min</span>
+                    <span className="text-xs text-gray-600 ml-2">
+                        Waiting for response: {elapsedTime} min
+                    </span>
                 )}
             </div>
         );
