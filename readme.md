@@ -3,6 +3,14 @@ This project provides a simple chat interface using React and Tauri that allows 
 
 ![Sysmon UI](https://raw.githubusercontent.com/otterdev0341/tauri_chat_with_local_ai/main/docs/p1.png)
 
+NOTE:
+to make in work properly please edit src-tauri/.env file to correct you local address http to ipv4 or ipv6
+
+in src-tarui/src/lib.rs
+you can implement LlmVariant and to_str to correct you model
+if you want to use you model plase implementd and use it in lib.rs talk_with_ai() funtion
+
+
 
 
 Features
