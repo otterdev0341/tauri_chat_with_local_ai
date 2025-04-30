@@ -15,6 +15,10 @@ Implement the LlmVariant enum and to_str() function to match your local model.
 
 Modify the talk_with_ai() function to use your custom model.
 
+Run Process:
+npm install 
+npm run tauri dev
+
 🚀 Features
 🗨️ Chat Interface: Simple UI for sending messages to the local LLM.
 
