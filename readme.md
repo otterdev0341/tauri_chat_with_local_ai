@@ -1,80 +1,74 @@
-React Tauri Chat with Abort Feature for Ollama LLM Model
-This project provides a simple chat interface using React and Tauri that allows users to interact with a local Ollama Large Language Model (LLM). The app has features to send messages to the LLM, display responses, and abort a long-running request if needed.
+🧠 React + Tauri Chat Interface with Abort Support for Ollama LLM
+This project provides a lightweight desktop chat application built with React and Tauri, designed to interact with a local Ollama Large Language Model (LLM). It supports real-time messaging and the ability to cancel long-running requests.
 
-![Sysmon UI](https://raw.githubusercontent.com/otterdev0341/tauri_chat_with_local_ai/main/docs/p1.png)
+![Easy Chat](https://raw.githubusercontent.com/otterdev0341/tauri_chat_with_local_ai/main/docs/p1.png)
 
-NOTE:
-to make in work properly please edit src-tauri/.env file to correct you local address http to ipv4 or ipv6
+⚙️ Configuration Notes
+Before running the project, you must configure it correctly:
 
-in src-tarui/src/lib.rs
-you can implement LlmVariant and to_str to correct you model
-if you want to use you model plase implementd and use it in lib.rs talk_with_ai() funtion
+src-tauri/.env
+Set your correct local address (e.g., http://127.0.0.1:11434) using either IPv4 or IPv6.
 
+src-tauri/src/lib.rs
 
+Implement the LlmVariant enum and to_str() function to match your local model.
 
+Modify the talk_with_ai() function to use your custom model.
 
-Features
-Chat Interface: A simple interface for sending messages to a host LLM model.
+🚀 Features
+🗨️ Chat Interface: Simple UI for sending messages to the local LLM.
 
-Abort Request: Users can abort the LLM request if the response takes too long.
+⛔ Abort Request: Abort long-running LLM responses.
 
-Tauri Integration: A local backend using Tauri to invoke Rust functions and interact with the LLM.
+🦀 Tauri Integration: Desktop app powered by Rust backend.
 
-Tech Stack
+🧰 Tech Stack
 Frontend: React
 
 Backend: Tauri (Rust)
 
-LLM: Ollama (Local LLM Model)
+LLM Engine: Ollama (runs locally)
 
-Getting Started
-Follow the steps below to set up and run the project locally.
-
+📦 Getting Started
 Prerequisites
-Node.js: Ensure that you have Node.js (version 16 or higher) installed.
+Ensure you have the following installed:
 
-Rust: You need Rust installed for Tauri integration. Follow the Rust installation guide to get Rust up and running.
+Node.js (v16 or higher)
 
-Tauri CLI: Install the Tauri CLI by running the following command:
+Rust
+
+Tauri CLI
+Install it with:
 
 bash
 Copy
 Edit
 cargo install tauri-cli
-Ollama Model: Ensure you have Ollama installed and running locally for the LLM interaction.
+Ollama installed and running locally
 
-Install Dependencies
+🔧 Installation
 Clone the repository:
 
 bash
 Copy
 Edit
-git clone https://github.com/your-username/your-project-name.git
-cd your-project-name
-Install the frontend dependencies:
+git clone https://github.com/otterdev0341/tauri_chat_with_local_ai.git
+cd tauri_chat_with_local_ai
+Install frontend dependencies:
 
 bash
 Copy
 Edit
 cd frontend
 npm install
-Install Tauri dependencies:
+Run the app:
 
 bash
 Copy
 Edit
 cd ..
 tauri dev
-Running the Application
-Start the development environment:
+💡 Usage
+Send a Message: Type in the chat input and press Enter or click Send.
 
-bash
-Copy
-Edit
-tauri dev
-Open the application in your browser and you should be able to interact with the LLM via the chat interface. You can also click "Abort" to cancel a long-running request.
-
-Usage
-Ask AI: Type a message in the input box and click "Send". The message will be sent to the local LLM model and the response will be displayed.
-
-Abort Request: If the request takes too long (for example, the response takes more than 10 minutes), you can click "Abort" to cancel the request.
+Abort Request: If the LLM is taking too long, click the Abort button to cancel the request.
