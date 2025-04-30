@@ -1,7 +1,7 @@
 React Tauri Chat with Abort Feature for Ollama LLM Model
 This project provides a simple chat interface using React and Tauri that allows users to interact with a local Ollama Large Language Model (LLM). The app has features to send messages to the LLM, display responses, and abort a long-running request if needed.
 
-![tauri-app](tauri_chat_with_local_ai/docs/img/programphoto.png)
+![photo not working](tauri_chat_with_local_ai/docs/img/programphoto.png)
 
 Features
 Chat Interface: A simple interface for sending messages to a host LLM model.
